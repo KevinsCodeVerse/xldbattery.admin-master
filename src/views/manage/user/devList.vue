@@ -1,7 +1,7 @@
 <template>
+  <!--  设备列表-->
   <div id="village_village">
-    <main-head> </main-head>
-
+    <main-head></main-head>
     <main-content>
       <screen-form :formList="formList" @search="search" />
       <el-table :data="list" stripe style="width: 100%" v-loading="loading">
@@ -12,27 +12,24 @@
             <span v-else>--</span>
           </template>
         </el-table-column>
-        >
+        <el-table-column prop="phone" label="设备序列号" align="center">
+          <template slot-scope="scope">
+            <span v-if="scope.row.devNum">{{ scope.row.devNum }}</span>
+            <span v-else>--</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="matchCode" label="匹配码" align="center">
           <template slot-scope="scope">
             <span v-if="scope.row.matchCode">{{ scope.row.matchCode }}</span>
             <span v-else>--</span>
           </template>
         </el-table-column>
-        >
-        <el-table-column prop="matchCode" label="App匹配码" align="center">
-          <template slot-scope="scope">
-            <span v-if="scope.row.appCode">{{ scope.row.appCode }}</span>
-            <span v-else>--</span>
-          </template>
-        </el-table-column>
-        >
-        <el-table-column label="创建时间" align="center">
+        <el-table-column label="绑定时间" align="center">
           <template slot-scope="scope">
             <timer :date="scope.row.createTime" format="Y-MM-DD HH:mm:ss" />
           </template>
         </el-table-column>
-        <el-table-column label="更新时间" align="center">
+        <el-table-column label="匹配码最新时间" align="center">
           <template slot-scope="scope">
             <timer :date="scope.row.updateTime" format="Y-MM-DD HH:mm:ss" />
           </template>
@@ -63,21 +60,27 @@ export default {
       params: {
         pageNo: 1,
         pageSize: 10,
-        isCount: true
+        keyword: ""
       },
       formList: [
-        {
-          type: "daterange",
-          value: [],
-          key1: "startTime",
-          key2: "endTime"
-        },
+        // {
+        //   type: "daterange",
+        //   value: [],
+        //   key1: "startTime",
+        //   key2: "endTime"
+        // },
         {
           type: "input",
-          placeholder: "手机号码",
-          key: "phone",
+          placeholder: "手机号码/设备序列号",
+          key: "keyword",
           value: ""
         }
+        // {
+        //   type: "input",
+        //   placeholder: "设备序列号",
+        //   key: "keyword",
+        //   value: ""
+        // }
       ],
       formData: {},
       list: [],
@@ -108,7 +111,7 @@ export default {
     getList() {
       this.loading = true;
       this.$request.post({
-        url: "admin/userInfo/list",
+        url: "admin/adInfo/usDevList",
         params: this.params,
         success: result => {
           this.list = result.list;

@@ -90,6 +90,8 @@
           label="十六进制编码"
           prop="value"
         ></el-table-column>
+        <el-table-column align="center" label="设备号长度" prop="devLength">
+        </el-table-column>
         <el-table-column align="center" label="创建时间">
           <template slot-scope="scope">
             <timer :date="scope.row.createTime" format="Y-MM-DD HH:mm" />
@@ -106,7 +108,7 @@
               plain
               size="small"
               type="primary"
-              @click="openEdit(scope.row)"
+              @click="openAdd(scope.row)"
               >修改
             </el-button>
             <el-button
@@ -139,17 +141,21 @@
       <el-dialog
         :close-on-click-modal="false"
         :visible.sync="addVisible"
-        title="添加厂家或车型"
+        :title="form.id ? '修改' : '添加厂家或车型'"
         width="500px"
         @close="addClose"
       >
         <div
           style="display:flex;justify-content: center;align-items: center;flex-direction: column"
         >
-          <el-form ref="form" :model="form" label-width="80px">
+          <el-form ref="form" :model="form" label-width="100px">
             <el-form-item label="标识:">
-              <el-radio v-model="form.radio" :label="1">A</el-radio>
-              <el-radio v-model="form.radio" :label="2">B</el-radio>
+              <el-radio v-model="form.manufacturersType" :label="1">A</el-radio>
+              <el-radio v-model="form.manufacturersType" :label="2">B</el-radio>
+            </el-form-item>
+            <el-form-item label="类型:">
+              <el-radio v-model="form.type" :label="1">厂家</el-radio>
+              <el-radio v-model="form.type" :label="2">车型</el-radio>
             </el-form-item>
             <el-form-item label="设备号长度:" label-width="100px">
               <div>
@@ -159,107 +165,26 @@
                 ></el-input>
               </div>
             </el-form-item>
-            <span style="color: #00a2e9;font-size: 20px">厂家:</span>
-            <el-form-item label="名称:" label-width="100px">
-              <div>
-                <el-input
-                  v-model="form.maName"
-                  placeholder="请输入名称"
-                ></el-input>
-              </div>
-            </el-form-item>
-            <el-form-item label="hex:" label-width="100px">
-              <div>
-                <el-input
-                  v-model="form.maValue"
-                  placeholder="请输入编码"
-                ></el-input>
-              </div>
-            </el-form-item>
-
-            <span style="color: #00a2e9;font-size: 20px">车型:</span>
-            <el-form-item label="名称:" label-width="100px">
-              <div>
-                <el-input
-                  v-model="form.moName"
-                  placeholder="请输入名称"
-                ></el-input>
-              </div>
-            </el-form-item>
-
-            <el-form-item label="hex:" label-width="100px">
-              <div>
-                <el-input
-                  v-model="form.moValue"
-                  placeholder="请输入编码"
-                ></el-input>
-              </div>
-            </el-form-item>
+            <div>
+              <el-form-item label="名称:" label-width="100px">
+                <div>
+                  <el-input
+                    v-model="form.name"
+                    placeholder="请输入名称"
+                  ></el-input>
+                </div>
+              </el-form-item>
+              <el-form-item label="hex:" label-width="100px">
+                <div>
+                  <el-input
+                    v-model="form.value"
+                    placeholder="请输入编码"
+                  ></el-input>
+                </div>
+              </el-form-item>
+            </div>
           </el-form>
           <el-button type="primary" @click="saveSub">提 交</el-button>
-        </div>
-      </el-dialog>
-
-      <!-- 编辑框 -->
-      <el-dialog
-        :close-on-click-modal="false"
-        :visible.sync="editVisible"
-        title="编辑"
-        width="500px"
-        @close="editClose"
-      >
-        <div
-          style="display:flex;justify-content: center;align-items: center;flex-direction: column"
-        >
-          <el-form ref="editForm" :model="editForm" label-width="80px">
-            <el-form-item label="标识:">
-              <el-radio
-                v-model="editForm.manufacturersType"
-                :label="1"
-                @input="change"
-                >A
-              </el-radio>
-              <el-radio
-                v-model="editForm.manufacturersType"
-                :label="2"
-                @input="change"
-                >B
-              </el-radio>
-            </el-form-item>
-            <el-form-item label="类型:">
-              <el-radio v-model="editForm.type" :label="1" @input="change"
-                >厂家
-              </el-radio>
-              <el-radio v-model="editForm.type" :label="2" @input="change"
-                >车型
-              </el-radio>
-            </el-form-item>
-            <el-form-item label="设备号长度:" label-width="100px">
-              <div>
-                <el-input
-                  v-model="editForm.devLength"
-                  placeholder="请输入设备号长度"
-                ></el-input>
-              </div>
-            </el-form-item>
-            <el-form-item label="名称:" label-width="100px">
-              <div>
-                <el-input
-                  v-model="editForm.name"
-                  placeholder="请输入名称"
-                ></el-input>
-              </div>
-            </el-form-item>
-            <el-form-item label="hex:" label-width="100px">
-              <div>
-                <el-input
-                  v-model="editForm.value"
-                  placeholder="请输入编码"
-                ></el-input>
-              </div>
-            </el-form-item>
-          </el-form>
-          <el-button type="primary" @click="editSub">提 交</el-button>
         </div>
       </el-dialog>
     </main-content>
@@ -271,7 +196,6 @@ export default {
   data() {
     return {
       addVisible: false,
-      editVisible: false,
       load: false,
       list: [],
       params: {
@@ -282,21 +206,11 @@ export default {
         manufacturersType: ""
       },
       form: {
-        radio: 1,
-        maValue: "",
-        maName: "",
-        moValue: "",
-        moName: "",
-        devLength: ""
-      },
-      editForm: {
-        id: "",
-        name: "",
+        manufacturersType: 1,
         value: "",
-        type: "",
-        manufacturersType: "",
-        radio: 1,
-        devLength: ""
+        name: "",
+        devLength: 0,
+        type: 1
       },
       total: 0
     };
@@ -322,14 +236,22 @@ export default {
       // this.editForm.manufacturersType=e
       // this.$forceUpdate()
     },
-    openAdd() {
+    openAdd(row) {
+      console.log("row", row);
+      if (row.id) {
+        this.form = {};
+        this.form = {
+          id: row.id,
+          devLength: row.devLength,
+          manufacturersType: row.manufacturersType,
+          name: row.name,
+          value: row.value,
+          type: row.type
+        };
+      } else {
+        this.addClose();
+      }
       this.addVisible = true;
-      this.addClose();
-    },
-    openEdit(row) {
-      this.editForm = row;
-      this.editVisible = true;
-      console.log("editForm:", this.editForm);
     },
     remove(id) {
       this.$confirm("确定删除吗?", "提示", {
@@ -357,23 +279,15 @@ export default {
     },
     addClose() {
       this.form = {
-        radio: 1,
-        maValue: "",
-        maName: "",
-        moValue: "",
-        moName: "",
-        devLength: ""
-      };
-    },
-    editClose() {
-      this.editForm = {
-        id: "",
-        name: "",
+        manufacturersType: 1,
         value: "",
-        type: "",
-        manufacturersType: "",
-        devLength: ""
+        name: "",
+        type: 1,
+        devLength: 0,
+        id: ""
       };
+      console.log("addClose", this.form);
+      this.addVisible = false;
     },
     search() {
       this.getList();
@@ -392,69 +306,50 @@ export default {
         }
       });
     },
-    editClear() {},
-    editSub() {
-      console.log("editFrom:", this.editForm);
-      if (this.editForm.name === "" || this.editForm.value === "") {
-        this.$message.warning("请完整填写信息");
-        return;
-      }
-      var params = this.editForm;
-      this.$request.post({
-        url: "system/sysManufacturerModels/editMaOrMo",
-        params: this.editForm,
-        success: () => {
-          this.$message.success("操作成功");
-          this.getList();
-          this.editVisible = false;
-          this.editClose();
-        },
-        finally: () => {
-          this.editVisible = false;
-        }
-      });
-    },
 
     saveSub() {
       if (
-        this.form.moName === "" ||
-        this.form.moValue === "" ||
-        this.form.maName === "" ||
-        this.form.maValue === "" ||
-        this.form.devLength === ""
+        this.form.name === "" ||
+        this.form.value === "" ||
+        this.form.devLength === "" ||
+        this.form.type === ""
       ) {
         this.$message.warning("请完整填写车型和厂家信息");
         return;
       }
-      let form = [];
-      let ma = {
-        name: this.form.maName,
-        value: this.form.maValue,
-        manufacturersType: this.form.radio,
-        type: 1,
-        devLength: Number(this.form.devLength)
-      };
-      let mo = {
-        name: this.form.moName,
-        value: this.form.moValue,
-        manufacturersType: this.form.radio,
-        type: 2,
-        devLength: Number(this.form.devLength)
-      };
-      form.push(ma, mo);
-      let params = JSON.stringify(form);
-      this.$request.post({
-        url: "system/sysManufacturerModels/batchAddMaOrMo",
-        params: { params },
-        success: () => {
-          this.$message.success("操作成功");
-          this.getList();
-          this.addVisible = false;
-        },
-        finally: () => {
-          this.addVisible = false;
-        }
-      });
+
+      if (this.form.id) {
+        this.$request.post({
+          url: "system/sysManufacturerModels/editMaOrMo",
+          params: this.form,
+          success: () => {
+            this.$message.success("操作成功");
+            this.getList();
+            this.addVisible = false;
+            this.addClose();
+          },
+          finally: () => {
+            this.addVisible = false;
+            this.addClose();
+          }
+        });
+      } else {
+        let params = JSON.stringify(this.form);
+        this.$request.post({
+          url: "system/sysManufacturerModels/batchAddMaOrMo",
+          params: { params },
+          success: () => {
+            this.$message.success("操作成功");
+            this.getList();
+            this.addVisible = false;
+            this.addClose();
+          },
+          finally: () => {
+            this.addVisible = false;
+            this.addClose();
+          }
+        });
+      }
     }
   }
 };
