@@ -19,7 +19,7 @@ module.exports = {
   // 公共路径(必须有的)
   publicPath: envConfig.baseUrl,
   // 输出文件目录
-  outputDir: "dist",
+  outputDir: "newAdmin",
   // 静态资源存放的文件夹(相对于ouputDir)
   assetsDir: "static",
 
@@ -38,10 +38,10 @@ module.exports = {
     proxy: {
       // 接口代理
       "/api": {
-        // target: "http://127.0.0.1:8082/", // 目标代理接口地址
-        target: "http://voltameteradmin.mtfsoft.cn/api/", // 目标代理接口地址
-        // target: "http://192.168.31.196:8082/", // 目标代理接口地址
-        // target: "http://120.27.162.252/api/", // 目标代理接口地址
+        // target: "http://voltameteradmin.mtfsoft.cn/api/", //测试
+        target: "https://lwny.mtfsoft.cn/apiV2/", //线上
+
+        // target: "http://192.168.31.196:8082/", // 肖
         secure: false,
         changeOrigin: true, // 开启代理，在本地创建一个虚拟服务端
         // ws: true, // 是否启用webso ckets 代理
@@ -51,9 +51,9 @@ module.exports = {
       },
       // 文件代理
       "/files": {
-        // target: 'http://192.168.0.246:8082',
-        target: "http://voltameteradmin.mtfsoft.cn/api/", // 目标代理接口地址
-        // target: "http://192.168.31.196:8082/", // 目标代理接口地址
+        // target: "http://voltameteradmin.mtfsoft.cn/api/", // 目标代理接口地址
+        target: "https://lwny.mtfsoft.cn/apiV2/", //线上
+        // target: "http://192.168.31.196:8082/", // 肖
         changeOrigin: true,
         secure: false
       }
@@ -86,33 +86,33 @@ module.exports = {
   },
 
   /*	// sass 全局样式变量
-          css: {
-              extract: ["production", "prod"].includes(process.env.NODE_ENV),
-              sourceMap: false,
-              loaderOptions: {
-                  // scss: {
-                      // 向全局sass样式传入共享的全局变量, $src可以配置图片cdn前缀
-                      // 详情: https://cli.vuejs.org/guide/css.html#passing-options-to-pre-processor-loaders
-                      // prependData: `
-                      // 	@import "@/assets/scss/element-variables.scss";
-                      // 	$src: "${process.env.VUE_APP_OSS_SRC}";
-                      // 	`
-                  // }
-              },
-              // 启用 CSS modules for all css / pre-processor files.
-              // requireModuleExtension: false,
-          },*/
+                                      css: {
+                                          extract: ["production", "prod"].includes(process.env.NODE_ENV),
+                                          sourceMap: false,
+                                          loaderOptions: {
+                                              // scss: {
+                                                  // 向全局sass样式传入共享的全局变量, $src可以配置图片cdn前缀
+                                                  // 详情: https://cli.vuejs.org/guide/css.html#passing-options-to-pre-processor-loaders
+                                                  // prependData: `
+                                                  // 	@import "@/assets/scss/element-variables.scss";
+                                                  // 	$src: "${process.env.VUE_APP_OSS_SRC}";
+                                                  // 	`
+                                              // }
+                                          },
+                                          // 启用 CSS modules for all css / pre-processor files.
+                                          // requireModuleExtension: false,
+                                      },*/
 
   // 打包分析
   /* 	chainWebpack: config => {
-              const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-              const IS_PROD = ["production", "prod"].includes(process.env.NODE_ENV);
-              if (IS_PROD) {
-                  config.plugin("webpack-report").use(BundleAnalyzerPlugin, [{
-                      analyzerMode: "static"
-                  }]);
-              }
-          }, */
+                                          const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+                                          const IS_PROD = ["production", "prod"].includes(process.env.NODE_ENV);
+                                          if (IS_PROD) {
+                                              config.plugin("webpack-report").use(BundleAnalyzerPlugin, [{
+                                                  analyzerMode: "static"
+                                              }]);
+                                          }
+                                      }, */
 
   // 开启 Gzip 压缩
   configureWebpack: config => {
