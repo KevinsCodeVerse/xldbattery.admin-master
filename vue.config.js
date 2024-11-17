@@ -86,33 +86,33 @@ module.exports = {
   },
 
   /*	// sass 全局样式变量
-                                      css: {
-                                          extract: ["production", "prod"].includes(process.env.NODE_ENV),
-                                          sourceMap: false,
-                                          loaderOptions: {
-                                              // scss: {
-                                                  // 向全局sass样式传入共享的全局变量, $src可以配置图片cdn前缀
-                                                  // 详情: https://cli.vuejs.org/guide/css.html#passing-options-to-pre-processor-loaders
-                                                  // prependData: `
-                                                  // 	@import "@/assets/scss/element-variables.scss";
-                                                  // 	$src: "${process.env.VUE_APP_OSS_SRC}";
-                                                  // 	`
-                                              // }
-                                          },
-                                          // 启用 CSS modules for all css / pre-processor files.
-                                          // requireModuleExtension: false,
-                                      },*/
+                                              css: {
+                                                  extract: ["production", "prod"].includes(process.env.NODE_ENV),
+                                                  sourceMap: false,
+                                                  loaderOptions: {
+                                                      // scss: {
+                                                          // 向全局sass样式传入共享的全局变量, $src可以配置图片cdn前缀
+                                                          // 详情: https://cli.vuejs.org/guide/css.html#passing-options-to-pre-processor-loaders
+                                                          // prependData: `
+                                                          // 	@import "@/assets/scss/element-variables.scss";
+                                                          // 	$src: "${process.env.VUE_APP_OSS_SRC}";
+                                                          // 	`
+                                                      // }
+                                                  },
+                                                  // 启用 CSS modules for all css / pre-processor files.
+                                                  // requireModuleExtension: false,
+                                              },*/
 
   // 打包分析
   /* 	chainWebpack: config => {
-                                          const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-                                          const IS_PROD = ["production", "prod"].includes(process.env.NODE_ENV);
-                                          if (IS_PROD) {
-                                              config.plugin("webpack-report").use(BundleAnalyzerPlugin, [{
-                                                  analyzerMode: "static"
-                                              }]);
-                                          }
-                                      }, */
+                                                  const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+                                                  const IS_PROD = ["production", "prod"].includes(process.env.NODE_ENV);
+                                                  if (IS_PROD) {
+                                                      config.plugin("webpack-report").use(BundleAnalyzerPlugin, [{
+                                                          analyzerMode: "static"
+                                                      }]);
+                                                  }
+                                              }, */
 
   // 开启 Gzip 压缩
   configureWebpack: config => {
